@@ -8,6 +8,7 @@ int main()
     cout<<"tes";
     cout << "Cek";
     cout<<"tes lagi";
+    cout << "lagi lagi";
 }
 
     
