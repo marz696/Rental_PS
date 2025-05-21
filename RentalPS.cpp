@@ -7,6 +7,7 @@ int main()
     return 0;
     cout<<"tes";
     cout << "Cek";
+    cout<<"tes lagi";
 }
 
     
