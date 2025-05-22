@@ -94,7 +94,7 @@ void bacaqueue()
     }
 }
 
-void daftarMember() {
+void daftarmember() {
     system("cls");
     string nama;
     cout << "masukkan nama member: ";
