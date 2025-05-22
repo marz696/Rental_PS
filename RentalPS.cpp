@@ -88,6 +88,41 @@ void bacaqueue()
     }
 }
 
+void daftarMember() {
+    system("cls");
+    string nama;
+    cout << "masukkan nama member: ";
+    cin.ignore(); 
+    getline(cin, nama);
+
+    Member *baru = new Member;
+    baru->nama = nama;
+    baru->next = NULL;
+
+    if (head == NULL) {
+        head = baru;
+    } else {
+        Member *temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = baru;
+    }
+
+    // Simpan ke file
+    ofstream file("member.txt", ios::app);
+    if (file.is_open()) {
+        file << nama << endl;
+        file.close();
+    } else {
+        cout << "Gagal membuka file!" << endl;
+    }
+
+    cout << "Member berhasil didaftarkan.\n";
+    system("pause");
+    system("cls");
+}
+
 void login()
 {
     const char *username = "AdminGanteng";
@@ -178,7 +213,7 @@ int main()
             /* code */
             break;
         case 3:
-            /* code */
+            daftarmember();
             break;
         case 4:
             string nama;
