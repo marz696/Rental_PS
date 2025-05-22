@@ -3,6 +3,91 @@
 #include <string.h>
 using namespace std;
 
+struct node
+{
+    string info;
+    node *kanan, *kiri;
+};
+
+node *awal, *akhir, *bantu, *hapus, *NB, *depan, *list;
+
+void buatqueuebaru()
+{
+    list = new node;
+    list = NULL;
+    awal = list;
+    akhir = list;
+}
+
+int queuekosong()
+{
+    if (awal == NULL)
+        return (true);
+    else
+        return (false);
+}
+
+void enqueue(string IB)
+{
+    NB = new node;
+    NB->info = IB;
+    NB->kanan = NULL;
+    NB->kiri = NULL;
+    if (queuekosong())
+    {
+        awal = NB;
+        akhir = NB;
+    }
+    else
+    {
+        bantu = akhir;
+        NB->kanan = bantu->kanan;
+        NB->kiri = bantu;
+        bantu->kanan = NB;
+        akhir = NB;
+    }
+}
+
+void dequeue()
+{
+    if (queuekosong())
+    {
+        cout << "List masih kosong";
+    }
+    else if (awal == akhir)
+    {
+        // Hapus jika hanya ada satu node
+        free(awal);
+        awal = akhir = NULL;
+        cout << "list sudah kosong";
+    }
+    else
+    {
+        hapus = awal; // Hapus di awal
+        awal = hapus->kanan;
+        if (awal != NULL)
+            awal->kiri = NULL;
+        free(hapus);
+    }
+}
+
+void bacaqueue()
+{
+    int i = 0;
+    bantu = awal;
+    while (bantu != NULL)
+    {
+        cout << i + 1 << ". " << bantu->info;
+        cout << endl;
+        bantu = bantu->kanan;
+        i++;
+    }
+    if (bantu == NULL)
+    {
+        cout << "Antrian sudah kosong" << endl;
+    }
+}
+
 void login()
 {
     const char *username = "AdminGanteng";
@@ -33,6 +118,35 @@ void login()
             system("cls");
         }
     }
+}
+
+void daftar()
+{
+    string nama;
+    cout << "Masukkan Nama Pelanggan: ";
+    cin >> nama;
+    enqueue(nama);
+    system("pause");
+    cout << "Nama Pelanggan sudah ditambahkan ke antrian" << endl;
+}
+
+void menghapus()
+{
+    dequeue();
+    system("pause");
+    cout << "Nama Pelanggan sudah dihapus dari antrian" << endl;
+}
+
+void waitinglist()
+{
+    cout << "Waiting List\n";
+    cout << "=============================\n";
+    cout << "|         ADIT GAMERS       |\n";
+    cout << "=============================\n";
+    cout << "| Waiting List:             |\n";
+    cout << "=============================\n";
+    bacaqueue();
+    system("pause");
 }
 
 int main()
@@ -67,16 +181,42 @@ int main()
             /* code */
             break;
         case 4:
-            /* code */
-            break;
-        case 5:
-            cout << "Exit Program\n";
-            break;
-
-        default:
-            cout << "Pilihan tidak valid\n";
-            system("pause");
-            system("cls");
+            string nama;
+            int pilih;
+            do
+            {
+                system("cls");
+                cout << "Adit Gamers" << endl;
+                cout << "==========================================" << endl;
+                cout << "1. Tambah nama pelanggan ke antrian" << endl;
+                cout << "2. Hapus nama pelanggan dari antrian" << endl;
+                cout << "3. Tampilkan nama pelanggan dalam antrian" << endl;
+                cout << "4. Kembali" << endl;
+                cout << "===========================================" << endl;
+                cout << "Pilih menu : ";
+                cin >> pilih;
+                int jumlah;
+                switch (pilih)
+                {
+                case 1:
+                    daftar();
+                    break;
+                case 2:
+                    menghapus();
+                    break;
+                case 3:
+                    waitinglist();
+                    system("pause");
+                    break;
+                case 4:
+                    return 0;
+                    break;
+                default:
+                    system("cls");
+                    cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+                    break;
+                }
+            } while (true);
         }
 
     } while (choice != 5);
