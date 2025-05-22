@@ -3,6 +3,12 @@
 #include <string.h>
 using namespace std;
 
+struct Member {
+    string nama;
+    Member *next;
+};
+Member *head = NULL;
+
 struct node
 {
     string info;
