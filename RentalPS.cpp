@@ -4,6 +4,39 @@
 #include <stdlib.h>
 using namespace std;
 
+void login()
+{
+    const char *username = "AdminGanteng";
+    const char *password = "123456";
+    char input_username[20];
+    char input_password[20];
+
+    while (true)
+    {
+        cout << "================================\n";
+        cout << "|            LOGIN             |\n";
+        cout << "================================\n";
+        cout << "Username: ";
+        cin >> input_username;
+        cout << "Password: ";
+        cin >> input_password;
+        if (strcmp(input_username, username) == 0 && strcmp(input_password, password) == 0)
+        {
+            cout << " >> Berhasil Login\n";
+            system("pause");
+            system("cls");
+            break;
+        }
+        else
+        {
+            cout << "Username atau Password salah!\n";
+            system("pause");
+            system("cls");
+        }
+    }
+}
+
+
 struct playstation {
     char nama[5];
     char ruang[10];
@@ -176,6 +209,10 @@ void menuQueue() {
 }
 
 int main() {
+
+    system("cls");
+    login();
+
     int choice;
     do {
         system("cls");
