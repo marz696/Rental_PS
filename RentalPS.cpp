@@ -200,7 +200,7 @@ int main()
     do
     {
         cout << "=============================\n";
-        cout << "|         ADIT GAMERS       |\n";
+        cout << "|         DENIS GAMERS       |\n";
         cout << "=============================\n";
         cout << "| Menu:                     |\n";
         cout << "| 1. List Harga             |\n"; // bentuk file dan ptb
