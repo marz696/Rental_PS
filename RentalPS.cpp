@@ -1,268 +1,218 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
-#include <fstream>
+#include <stdlib.h>
 using namespace std;
 
-struct Member {
-    string nama;
-    Member *next;
+struct playstation {
+    char nama[5];
+    char ruang[10];
+    char harga[20];
+    char durasi[10];
 };
-Member *head = NULL;
 
-struct node
-{
-    string info;
+playstation daftarPS[] = {
+    {"PS3", "NON-VIP", "Rp.  5.000", "1 Jam"},
+    {"PS3", "VIP",     "Rp.  8.000", "1 Jam"},
+    {"PS4", "NON-VIP", "Rp. 10.000", "1 Jam"},
+    {"PS4", "VIP",     "Rp. 15.000", "1 Jam"},
+    {"PS5", "NON-VIP", "Rp. 15.000", "1 Jam"},
+    {"PS5", "VIP",     "Rp. 20.000", "1 Jam"},
+};
+
+struct node {
+    string nama;
     node *kanan, *kiri;
 };
 
-node *awal, *akhir, *bantu, *hapus, *NB, *depan, *list;
+node *awal = NULL, *akhir = NULL, *NB, *bantu, *hapus;
 
-void buatqueuebaru()
-{
-    list = new node;
-    list = NULL;
-    awal = list;
-    akhir = list;
-}
-
-int queuekosong()
-{
-    if (awal == NULL)
-        return (true);
-    else
-        return (false);
-}
-
-void enqueue(string IB)
-{
+void enqueue(string IB) {
     NB = new node;
-    NB->info = IB;
+    NB->nama = IB;
     NB->kanan = NULL;
     NB->kiri = NULL;
-    if (queuekosong())
-    {
-        awal = NB;
-        akhir = NB;
-    }
-    else
-    {
-        bantu = akhir;
-        NB->kanan = bantu->kanan;
-        NB->kiri = bantu;
-        bantu->kanan = NB;
+    if (awal == NULL) {
+        awal = akhir = NB;
+    } else {
+        NB->kiri = akhir;
+        akhir->kanan = NB;
         akhir = NB;
     }
 }
 
-void dequeue()
-{
-    if (queuekosong())
-    {
-        cout << "List masih kosong";
-    }
-    else if (awal == akhir)
-    {
-        // Hapus jika hanya ada satu node
-        free(awal);
-        awal = akhir = NULL;
-        cout << "list sudah kosong";
-    }
-    else
-    {
-        hapus = awal; // Hapus di awal
-        awal = hapus->kanan;
-        if (awal != NULL)
-            awal->kiri = NULL;
-        free(hapus);
+void dequeue() {
+    if (awal == NULL) {
+        cout << "Antrian kosong!\n";
+    } else {
+        hapus = awal;
+        awal = awal->kanan;
+        if (awal) awal->kiri = NULL;
+        delete hapus;
     }
 }
 
-void bacaqueue()
-{
-    int i = 0;
+void bacaqueue() {
     bantu = awal;
-    while (bantu != NULL)
-    {
-        cout << i + 1 << ". " << bantu->info;
-        cout << endl;
+    int i = 1;
+    while (bantu != NULL) {
+        cout << i++ << ". " << bantu->nama << endl;
         bantu = bantu->kanan;
-        i++;
     }
-    if (bantu == NULL)
-    {
-        cout << "Antrian sudah kosong" << endl;
+    if (awal == NULL) {
+        cout << "Tidak ada pelanggan dalam antrian\n";
     }
 }
 
-void daftarmember() {
-    system("cls");
+void listhargaps() {
+    cout << "\n==============================================\n";
+    cout << "|               ADIT GAMERS                    |\n";
+    cout << "================================================\n";
+    cout << "| No | Nama PS |  Ruang  |   Harga    | Durasi |\n";
+    cout << "================================================\n";
+    for (int i = 0; i < 6; i++) {
+        printf("| %2d | %-7s | %-7s | %-8s | %-6s |\n", i+1, daftarPS[i].nama, daftarPS[i].ruang, daftarPS[i].harga, daftarPS[i].durasi);
+    }
+    cout << "==========================================\n\n";
+}
+
+void sewaPS() {
+    listhargaps();
+    int pilihan;
+    char nama[50];
+    cout << "Masukkan nama penyewa: ";
+    cin.ignore();
+    cin.getline(nama, 50);
+    cout << "Pilih nomor PS yang ingin disewa (1-6): ";
+    cin >> pilihan;
+
+    if (pilihan < 1 || pilihan > 6) {
+        cout << "Pilihan tidak valid!\n";
+        return;
+    }
+
+    FILE *file = fopen("sewa.txt", "a");
+    if (file == NULL) {
+        cout << "Gagal membuka file sewa.txt!\n";
+        return;
+    }
+
+    playstation ps = daftarPS[pilihan - 1];
+    fprintf(file, "Nama: %s, PS: %s, Ruang: %s, Harga: %s, Durasi: %s\n",
+            nama, ps.nama, ps.ruang, ps.harga, ps.durasi);
+    fclose(file);
+
+    cout << "\nTransaksi Berhasil Disimpan!\n";
+    cout << "Nama    : " << nama << endl;
+    cout << "PS      : " << ps.nama << endl;
+    cout << "Ruang   : " << ps.ruang << endl;
+    cout << "Harga   : " << ps.harga << endl;
+    cout << "Durasi  : " << ps.durasi << endl << endl;
+}
+
+void tambahMember() {
+    char nama[50];
+    cout << "Masukkan nama member baru: ";
+    cin.ignore();
+    cin.getline(nama, 50);
+
+    FILE *file = fopen("member.txt", "a");
+    if (file == NULL) {
+        cout << "Gagal membuka file member.txt!\n";
+        return;
+    }
+    fprintf(file, "%s\n", nama);
+    fclose(file);
+
+    cout << "Member berhasil ditambahkan.\n";
+}
+
+void tampilkanMember() {
+    FILE *file = fopen("member.txt", "r");
+    if (file == NULL) {
+        cout << "Gagal membuka file member.txt atau belum ada member.\n";
+        return;
+    }
+    char nama[100];
+    int i = 1;
+    cout << "\nDaftar Member:\n";
+    while (fgets(nama, sizeof(nama), file)) {
+        nama[strcspn(nama, "\n")] = 0; // hapus newline
+        cout << i++ << ". " << nama << endl;
+    }
+    fclose(file);
+    cout << endl;
+}
+
+void menuQueue() {
+    int pilih;
     string nama;
-    cout << "masukkan nama member: ";
-    cin.ignore(); 
-    getline(cin, nama);
-
-    Member *baru = new Member;
-    baru->nama = nama;
-    baru->next = NULL;
-
-    if (head == NULL) {
-        head = baru;
-    } else {
-        Member *temp = head;
-        while (temp->next != NULL) {
-            temp = temp->next;
+    do {
+        system("cls");
+        cout << "Adit Gamers - Waiting List\n";
+        cout << "1. Tambah nama ke antrian\n";
+        cout << "2. Hapus nama dari antrian\n";
+        cout << "3. Tampilkan antrian\n";
+        cout << "4. Kembali\n";
+        cout << "Pilih: ";
+        cin >> pilih;
+        switch (pilih) {
+            case 1:
+                cout << "Masukkan nama pelanggan: ";
+                cin >> nama;
+                enqueue(nama);
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                bacaqueue();
+                system("pause");
+                break;
+            case 4:
+                return;
         }
-        temp->next = baru;
-    }
-
-    // Simpan ke file
-    ofstream file("member.txt", ios::app);
-    if (file.is_open()) {
-        file << nama << endl;
-        file.close();
-    } else {
-        cout << "Gagal membuka file!" << endl;
-    }
-
-    cout << "Member berhasil didaftarkan.\n";
-    system("pause");
-    system("cls");
+    } while (true);
 }
 
-void login()
-{
-    const char *username = "AdminGanteng";
-    const char *password = "123456";
-    char input_username[20];
-    char input_password[20];
-
-    while (true)
-    {
-        cout << "================================\n";
-        cout << "|            LOGIN             |\n";
-        cout << "================================\n";
-        cout << "Username: ";
-        cin >> input_username;
-        cout << "Password: ";
-        cin >> input_password;
-        if (strcmp(input_username, username) == 0 && strcmp(input_password, password) == 0)
-        {
-            cout << " >> Berhasil Login\n";
-            system("pause");
-            system("cls");
-            break;
-        }
-        else
-        {
-            cout << "Username atau Password salah!\n";
-            system("pause");
-            system("cls");
-        }
-    }
-}
-
-void daftar()
-{
-    string nama;
-    cout << "Masukkan Nama Pelanggan: ";
-    cin >> nama;
-    enqueue(nama);
-    system("pause");
-    cout << "Nama Pelanggan sudah ditambahkan ke antrian" << endl;
-}
-
-void menghapus()
-{
-    dequeue();
-    system("pause");
-    cout << "Nama Pelanggan sudah dihapus dari antrian" << endl;
-}
-
-void waitinglist()
-{
-    cout << "Waiting List\n";
-    cout << "=============================\n";
-    cout << "|         ADIT GAMERS       |\n";
-    cout << "=============================\n";
-    cout << "| Waiting List:             |\n";
-    cout << "=============================\n";
-    bacaqueue();
-    system("pause");
-}
-
-int main()
-{
-    system("cls");
-    login();
-
+int main() {
     int choice;
-    do
-    {
+    do {
+        system("cls");
         cout << "=============================\n";
-        cout << "|         DENIS GAMERS       |\n";
+        cout << "|         ADIT GAMERS       |\n";
         cout << "=============================\n";
-        cout << "| Menu:                     |\n";
-        cout << "| 1. List Harga             |\n"; // bentuk file dan ptb
-        cout << "| 2. List Member            |\n"; // bentuk file dan linked list
-        cout << "| 3. Daftar Member          |\n"; // bentuk file nah sisipnya mau digmnain bebas bg
-        cout << "| 4. Waiting List           |\n"; // bentuk queue
-        cout << "| 5. Exit                   |\n";
+        cout << "| 1. List Harga             |\n";
+        cout << "| 2. Sewa PS                |\n";
+        cout << "| 3. List Member            |\n";
+        cout << "| 4. Daftar Member          |\n";
+        cout << "| 5. Waiting List           |\n";
+        cout << "| 6. Exit                   |\n";
         cout << "=============================\n";
         cout << "Pilih Menu: ";
         cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            /* code */
-            break;
-        case 2:
-            /* code */
-            break;
-        case 3:
-            daftarmember();
-            break;
-        case 4:
-            string nama;
-            int pilih;
-            do
-            {
-                system("cls");
-                cout << "Adit Gamers" << endl;
-                cout << "==========================================" << endl;
-                cout << "1. Tambah nama pelanggan ke antrian" << endl;
-                cout << "2. Hapus nama pelanggan dari antrian" << endl;
-                cout << "3. Tampilkan nama pelanggan dalam antrian" << endl;
-                cout << "4. Kembali" << endl;
-                cout << "===========================================" << endl;
-                cout << "Pilih menu : ";
-                cin >> pilih;
-                int jumlah;
-                switch (pilih)
-                {
-                case 1:
-                    daftar();
-                    break;
-                case 2:
-                    menghapus();
-                    break;
-                case 3:
-                    waitinglist();
-                    system("pause");
-                    break;
-                case 4:
-                    return 0;
-                    break;
-                default:
-                    system("cls");
-                    cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
-                    break;
-                }
-            } while (true);
+        switch (choice) {
+            case 1:
+                listhargaps();
+                system("pause");
+                break;
+            case 2:
+                sewaPS();
+                system("pause");
+                break;
+            case 3:
+                tampilkanMember();
+                system("pause");
+                break;
+            case 4:
+                tambahMember();
+                system("pause");
+                break;
+            case 5:
+                menuQueue();
+                break;
         }
+    } while (choice != 6);
 
-    } while (choice != 5);
-    {
-        return 0;
-    }
+    return 0;
 }
