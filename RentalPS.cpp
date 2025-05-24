@@ -4,6 +4,15 @@
 #include <string.h>
 using namespace std;
 
+struct Member
+{
+    char nama[50];
+    char noTelp[20];
+    int transaksi;
+    Member *next;
+};
+
+Member *head = NULL;
 
 void login()
 {
@@ -84,6 +93,51 @@ Makanan snack[] = {
     {"Milo", 4000},
 };
 
+void muatMemberDariFile() 
+{
+    FILE *file = fopen("member.txt", "r");
+    if (file == NULL)
+    {
+        return;
+    }
+
+    char baris[100];
+    Member *tail = NULL;
+
+    while (fgets(baris, sizeof(baris), file))
+    {
+        if (strncmp(baris, "Nama: ", 6) == 0)
+        {
+            Member *baru = new Member;
+            strcpy(baru->nama, baris + 6);
+            baru->nama[strcspn(baru->nama, "\n")] = 0;
+
+            fgets(baris, sizeof(baris), file);
+            strcpy(baru->noTelp, baris + 8);
+            baru->noTelp[strcspn(baru->noTelp, "\n")] = 0;
+
+            fgets(baris, sizeof(baris), file);
+            sscanf(baris, "Transaksi: %d", &baru->transaksi);
+
+            baru->next = NULL;
+
+            if (head == NULL)
+            {
+                head = baru;
+                tail = baru;
+            }
+            else
+            {
+                tail->next = baru;
+                tail = baru;
+            }
+
+            fgets(baris, sizeof(baris), file); // skip -----
+        }
+    }
+
+    fclose(file);
+}
 
 void listHarga()
 {
@@ -227,6 +281,71 @@ void listHarga()
     }
 }
 
+void tambahMember() // fungsi untuk menambahkan member yang akan dimasukan file 
+{
+    Member *baru = new Member;
+
+    cout << "Masukkan Nama: ";
+    cin.ignore();
+    cin.getline(baru->nama, 50);
+
+    cout << "Masukkan No. Telp: ";
+    cin.getline(baru->noTelp, 20);
+
+    baru->transaksi = 0;
+    baru->next = NULL;
+
+    if (head == NULL)
+    {
+        head = baru;
+    }
+    else
+    {
+        Member *bantu = head;
+        while (bantu->next != NULL)
+        {
+            bantu = bantu->next;
+        }
+        bantu->next = baru;
+    }
+    FILE *file = fopen("member.txt", "a");
+    if (file != NULL)
+    {
+        fprintf(file, "Nama: %s\n", baru->nama);
+        fprintf(file, "NoTelp: %s\n", baru->noTelp);
+        fprintf(file, "Transaksi: %d\n", baru->transaksi);
+        fprintf(file, "-----\n");
+        fclose(file);
+    }
+
+    cout << "Member berhasil ditambahkan.\n";
+}
+
+void tampilkanMember() // fungsi untuk menampilkan member yang akan tersorting oleh fungsi sortMembers()
+{
+    system("cls");
+    cout << "=============================" << endl;
+    cout << "|         LIST MEMBER       |\n";
+    cout << "=============================" << endl;
+    if (head == NULL)
+    {
+        cout << "Belum ada data member\n";
+        return;
+    }
+
+    Member *bantu = head;
+    int no = 1;
+
+    while (bantu != NULL)
+    {
+        cout << no++ << ". Nama     : " << bantu->nama << endl;
+        cout << "   No Telp  : " << bantu->noTelp << endl;
+        cout << "   Transaksi: " << bantu->transaksi << endl
+             << endl;
+        bantu = bantu->next;
+    }
+}
+
 
 int main() // fungsi utama
 {
@@ -252,10 +371,12 @@ int main() // fungsi utama
             listHarga();
             break;
         case 2:
+            tampilkanMember();
             system("pause");
             system("cls");
             break;
         case 3:
+            tambahMember();
             system("pause");
             system("cls");
             break;
