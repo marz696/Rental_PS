@@ -31,7 +31,7 @@ void login()
         else
         {
             cout << "Username atau Password salah!\n";
-            system("pause");a
+            system("pause");
             system("cls");
         }
     }
@@ -153,6 +153,77 @@ void listHarga()
         }
         cout << "=====================================================" << endl;
 
+         // INPUT PESANAN
+        do
+        {
+            cout << "Pilih PlayStation (1-6): ";
+            cin >> pilihanPS;
+            if (pilihanPS < 1 || pilihanPS > 6)
+                cout << "Pilihan PlayStation tidak valid! Coba lagi." << endl;
+        } while (pilihanPS < 1 || pilihanPS > 6);
+        cout << "-> " << daftar[pilihanPS - 1].nama << " " << daftar[pilihanPS - 1].durasi << endl;
+        total += daftar[pilihanPS - 1].harga;
+        
+        int pilihanSnack;
+        do
+        {
+            cout << "Pilih Snack (1-12, 0 untuk selesai): ";
+            cin >> pilihanSnack;
+            if (pilihanSnack == 0)
+                break;
+            if (pilihanSnack < 1 || pilihanSnack > 12)
+            {
+                cout << "Pilihan Snack tidak valid! Coba lagi." << endl;
+            }
+            else
+            {
+                // simpan nama dan harga snack terpilih
+                pilihSnackNama[snackCount] = snack[pilihanSnack - 1].nama;
+                pilihSnackHarga[snackCount] = snack[pilihanSnack - 1].harga;
+                snackCount++;
+                total += snack[pilihanSnack - 1].harga;
+
+                cout << "-> " << snack[pilihanSnack - 1].nama << endl;
+            }
+        } while (true);
+
+        int beforediskon = total;
+        int diskon = 0;
+
+        // Cek member dengan searching
+        char namaPelanggan[50];
+        cout << "\nMasukkan Nama Pelanggan: ";
+        cin.ignore();
+        cin.getline(namaPelanggan, 50);
+
+        // Cetak rincian transaksi 
+        system("pause");
+        system("cls");
+        cout << "\n======= Rincian Transaksi =======" << endl;
+        cout << "Nama Pelanggan: " << namaPelanggan << endl;
+        cout << "PlayStation: " << daftar[pilihanPS - 1].nama
+             << " (" << daftar[pilihanPS - 1].durasi << ") - "
+             << daftar[pilihanPS - 1].harga << endl;
+
+        if (snackCount > 0)
+        {
+            cout << "Snack:\n";
+            for (int i = 0; i < snackCount; i++)
+            {
+                cout << "-> " << pilihSnackNama[i]
+                     << " - " << pilihSnackHarga[i] << endl;
+            }
+        }
+        if (diskon > 0)
+        {
+            cout << "Total               : " << beforediskon << endl;
+            cout << "Potongan Diskon(10%): " << diskon << endl;
+        }
+        cout << "Total Bayar         : " << total << endl;
+        cout << "================================" << endl;
+
+        system("pause");
+        system("cls");
     }
 }
 
