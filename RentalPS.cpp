@@ -321,6 +321,51 @@ void tambahMember() // fungsi untuk menambahkan member yang akan dimasukan file
     cout << "Member berhasil ditambahkan.\n";
 }
 
+void sortMembers() // Bubble Sort 
+{
+    if (head == NULL || head->next == NULL)
+        return;
+
+    bool swapped;
+    Member *ptr;
+    Member *lptr = NULL;
+
+    do
+    {
+        swapped = false;
+        ptr = head;
+
+        while (ptr->next != lptr)
+        {
+            if (strcmp(ptr->nama, ptr->next->nama) > 0)
+            {
+                // Tukar isi data antar node
+                char tmpNama[50], tmpTelp[20];
+                int tmpTrans;
+
+                // simpan data ptr
+                strcpy(tmpNama, ptr->nama);
+                strcpy(tmpTelp, ptr->noTelp);
+                tmpTrans = ptr->transaksi;
+
+                // pindahkan data ptr->next ke ptr
+                strcpy(ptr->nama, ptr->next->nama);
+                strcpy(ptr->noTelp, ptr->next->noTelp);
+                ptr->transaksi = ptr->next->transaksi;
+
+                // kembalikan data tmp ke ptr->next
+                strcpy(ptr->next->nama, tmpNama);
+                strcpy(ptr->next->noTelp, tmpTelp);
+                ptr->next->transaksi = tmpTrans;
+
+                swapped = true;
+            }
+            ptr = ptr->next;
+        }
+        lptr = ptr;
+    } while (swapped);
+}
+
 void tampilkanMember() // fungsi untuk menampilkan member yang akan tersorting oleh fungsi sortMembers()
 {
     system("cls");
@@ -332,6 +377,7 @@ void tampilkanMember() // fungsi untuk menampilkan member yang akan tersorting o
         cout << "Belum ada data member\n";
         return;
     }
+    sortMembers();
 
     Member *bantu = head;
     int no = 1;
