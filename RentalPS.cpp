@@ -93,6 +93,44 @@ Makanan snack[] = {
     {"Milo", 4000},
 };
 
+bool cekMember(const char *nama) // SEARCHING
+{
+    Member *bantu = head;
+    while (bantu != NULL)
+    {
+        if (strcmp(bantu->nama, nama) == 0)
+            return true;
+        bantu = bantu->next;
+    }
+    return false;
+}
+
+void tambahTransaksiMember(const char *nama) // SISIPNODE LINKED LIST FILE 
+{
+    Member *bantu = head;
+    while (bantu != NULL)
+    {
+        if (strcmp(bantu->nama, nama) == 0)
+        {
+            bantu->transaksi++;
+            break;
+        }
+        bantu = bantu->next;
+    }
+
+    FILE *file = fopen("member.txt", "w");
+    bantu = head;
+    while (bantu != NULL)
+    {
+        fprintf(file, "Nama: %s\n", bantu->nama);
+        fprintf(file, "NoTelp: %s\n", bantu->noTelp);
+        fprintf(file, "Transaksi: %d\n", bantu->transaksi);
+        fprintf(file, "-----\n");
+        bantu = bantu->next;
+    }
+    fclose(file);
+}
+
 void muatMemberDariFile() 
 {
     FILE *file = fopen("member.txt", "r");
@@ -249,6 +287,16 @@ void listHarga()
         cout << "\nMasukkan Nama Pelanggan: ";
         cin.ignore();
         cin.getline(namaPelanggan, 50);
+        if (cekMember(namaPelanggan))
+        {
+            cout << "Anda terdaftar sebagai MEMBER!\n";
+            diskon = beforediskon * 10 / 100;
+            total = beforediskon - diskon;
+            tambahTransaksiMember(namaPelanggan); 
+        }
+        else
+        {
+        }
 
         // Cetak rincian transaksi 
         system("pause");
@@ -321,7 +369,7 @@ void tambahMember() // fungsi untuk menambahkan member yang akan dimasukan file
     cout << "Member berhasil ditambahkan.\n";
 }
 
-void sortMembers() // Bubble Sort 
+void sortMembers() // Bubble Sort
 {
     if (head == NULL || head->next == NULL)
         return;
@@ -391,7 +439,6 @@ void tampilkanMember() // fungsi untuk menampilkan member yang akan tersorting o
         bantu = bantu->next;
     }
 }
-
 
 int main() // fungsi utama
 {
