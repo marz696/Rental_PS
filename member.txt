@@ -1,1 +1,12 @@
-akbar
+Nama: Adit PS
+NoTelp: 08213213
+Transaksi: 0
+-----
+Nama: Akbar Satoru
+NoTelp: 088912341
+Transaksi: 1
+-----
+Nama: Damar Bro
+NoTelp: 0889123123
+Transaksi: 0
+-----
