@@ -444,6 +444,7 @@ int main() // fungsi utama
 {
     system("cls");
     login();
+    muatMemberDariFile();
     int choice;
     do
     {
